@@ -10,6 +10,7 @@ import org.example.model.Game;
 import org.example.model.Player;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class GameWindow extends Application {
@@ -19,12 +20,8 @@ public class GameWindow extends Application {
     private Label scoreLabel;
     private TextField inputField;
     private Label playerLabel;
-    private List<Player> players = new ArrayList<>();
+    private final List<Player> players = new ArrayList<>();
     private GridPane scoreBoard;
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -181,7 +178,9 @@ public class GameWindow extends Application {
      *  Fin de partie avec annonce du vainqueur
      */
     private void showEndGameDialog() {
-        Player winner = players.stream().max((p1, p2) -> Integer.compare(p1.calculateTotalScore(), p2.calculateTotalScore())).orElse(null);
+        Player winner = players.stream()
+                .max(Comparator.comparingInt(Player::calculateTotalScore))
+                .orElse(null);
         String winnerText = (winner != null) ? "Vainqueur : " + winner.getName() + " avec " + winner.calculateTotalScore() + " points !" : "Égalité !";
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -68,10 +68,6 @@ public class Frame {
                 (shots.get(0) + shots.get(1) + shots.get(2) == 15));
     }
 
-    public int getScore() {
-        return score;
-    }
-
     public int getShotScore(int index) {
         if (index >= 0 && index < shots.size()) {
             return shots.get(index);

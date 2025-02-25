@@ -5,20 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private List<Player> players;
+    private final List<Player> players;
     private int currentPlayerIndex;
 
     /**
-     * Constructeur de Partie (Game)
+     * Constructeur de Partie (Game).
      *
      * @param playerNames Liste des joueurs pour cette partie, pas de possibilité de rajouter des nouveaux joueurs
-     *                    en cours de partie
+     * en cours de partie.
      */
     public Game(List<Player> playerNames) {
         players = new ArrayList<>();
-        for (Player player : playerNames) {
-            players.add(player);
-        }
+        players.addAll(playerNames);
         currentPlayerIndex = 0;
     }
 
@@ -47,7 +45,9 @@ public class Game {
         System.out.println("=======================\n");
     }
     /**
-     * Vérifie si le jeu est terminé en regardant si tous les joueurs ont fini leurs lancers pour toutes les frames
+     * Vérifie si le jeu est terminé en regardant si tous les joueurs ont fini leurs lancers pour toutes les frames.
+     *
+     * @return boolean which says if the game is over or no.
      */
     public boolean isGameOver() {
         for (Player player : players) {

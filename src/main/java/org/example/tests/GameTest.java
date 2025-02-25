@@ -10,6 +10,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameTest {
+    private static final int NUMBER_OF_QUILLES = 15;
+    private static final int NUMBER_OF_FRAME = 15;
     @Test
     void testFinDePartie() {
         List<Player> players = new ArrayList<>();
@@ -18,12 +20,12 @@ public class GameTest {
         Game game = new Game(players);
 
 
-        for (int i = 0; i < 5; i++) {
-            player.lancer(15); // 5 strikes pour finir
+        for (int i = 0; i < NUMBER_OF_FRAME; i++) {
+            player.lancer(NUMBER_OF_QUILLES);
         }
-        player.lancer(15);
-        player.lancer(15);
-        player.lancer(15);
+        player.lancer(NUMBER_OF_QUILLES);
+        player.lancer(NUMBER_OF_QUILLES);
+        player.lancer(NUMBER_OF_QUILLES);
 
         assertTrue(game.isGameOver(), "La partie doit être terminée !");
     }

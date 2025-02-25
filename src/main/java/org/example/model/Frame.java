@@ -31,8 +31,10 @@ public class Frame {
     public void addShot(int quilles, boolean isLastFrame) {
         int totalQuilles = shots.stream().mapToInt(Integer::intValue).sum();
 
-        if (((shots.size() < 3&& (totalQuilles + quilles <= 15)) || (isLastFrame && isStrike() && shots.size() < 4))) {
+        if (((shots.size() < 3 && (totalQuilles + quilles <= 15)) ||
+                (isLastFrame && isStrike() && shots.size() < 4))) {
             shots.add(quilles);
+            calculateScore();
         } else {
             afficherErreur("Impossible d'ajouter ce lancer, total des quilles dépassé !");
         }
@@ -43,6 +45,13 @@ public class Frame {
         alert.setHeaderText("Lancer invalide !");
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void calculateScore() {
+        score = 0;
+        for (int shot : shots) {
+            score += shot;
+        }
     }
 
     /**
@@ -58,14 +67,19 @@ public class Frame {
      * Vérifie si on a fait un strike
      */
     public boolean isStrike() {
-        return shots.size() == 1 && shots.get(0) == 15;
+        return shots.size() >= 1 && shots.get(0) == 15;
     }
     /**
      * Vérifie si on a effectué un spare
      */
     public boolean isSpare() {
-        return shots.size() > 1 && ((shots.get(0) + shots.get(1) == 15) ||
-                (shots.get(0) + shots.get(1) + shots.get(2) == 15));
+        if (shots.size() < 2) {
+            return false;
+        }
+
+        int sum = shots.stream().limit(3).mapToInt(Integer::intValue).sum();
+
+        return sum == 15;
     }
 
     public int getShotScore(int index) {

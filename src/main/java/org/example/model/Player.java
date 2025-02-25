@@ -84,7 +84,7 @@ public class Player {
 
     /**
      * Vérifie si le joueur a terminé tous ses lancers
-     * Si on est pas à la dernière frame alors on a pas terminé
+     * Si on n'est pas à la dernière frame alors on a pas terminé
      * Si on est à la dernière frame : -Si pas strike/spare alors on vérifie que tous les lancers sont faits
      *                                 -Si strike/spare on a droit à un lancer bonus (4 au lieu de 3)
      *

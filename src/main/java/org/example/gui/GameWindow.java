@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.model.Game;
 import org.example.model.Player;
@@ -36,7 +37,7 @@ public class GameWindow extends Application {
     }
 
     /**
-     * 🏠 Écran d'accueil avec "Jouer" et "Quitter"
+     *  Écran d'accueil avec "Jouer" et "Quitter"
      */
     private void showHomeScreen() {
         Button playButton = new Button("Jouer");
@@ -53,7 +54,7 @@ public class GameWindow extends Application {
     }
 
     /**
-     * 👥 Écran de saisie des noms des joueurs
+     *  Écran de saisie des noms des joueurs
      */
     private void showPlayerSetupScreen() {
         VBox layout = new VBox(10);
@@ -96,7 +97,7 @@ public class GameWindow extends Application {
     }
 
     /**
-     * 🎳 Interface de jeu (saisie des scores + Score Board)
+     *  Interface de jeu (saisie des scores + Score Board)
      */
     private void showGameScreen() {
         scoreLabel = new Label("Score: 0");
@@ -108,7 +109,6 @@ public class GameWindow extends Application {
         Button lancerButton = new Button("Lancer");
         lancerButton.setOnAction(e -> lancerQuilles());
 
-        // 🎳 Ajout du Score Board
         scoreBoard = new GridPane();
         scoreBoard.setHgap(10);
         scoreBoard.setVgap(10);
@@ -122,60 +122,63 @@ public class GameWindow extends Application {
     }
 
     /**
-     * 🎳 Gestion des lancers
+     * Gestion des lancers
      */
     private void lancerQuilles() {
         try {
             int quilles = Integer.parseInt(inputField.getText().trim());
-            Player currentPlayer = players.get(currentPlayerIndex);
-            game.lancer(quilles);
+            if (quilles <=15 && quilles > 0){
+                scoreLabel.setTextFill(Color.BLACK);
+                Player currentPlayer = players.get(currentPlayerIndex);
+                game.lancer(quilles);
 
-            scoreLabel.setText("Score: " + currentPlayer.calculateTotalScore());
-            inputField.clear();
+                scoreLabel.setText("Score: " + currentPlayer.calculateTotalScore());
+                inputField.clear();
 
-            updateScoreBoard(); // 🔄 Mise à jour du tableau
+                updateScoreBoard();
 
-            if (game.isGameOver()) {
-                showEndGameDialog();
-                return;
+                if (game.isGameOver()) {
+                    showEndGameDialog();
+                    return;
+                }
+
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+                playerLabel.setText("Tour de : " + players.get(currentPlayerIndex).getName());
+            } else {
+                scoreLabel.setTextFill(Color.RED);
+                scoreLabel.setText("Veuillez entrer un nombre entre 0 et 15 !");
             }
-
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-            playerLabel.setText("Tour de : " + players.get(currentPlayerIndex).getName());
-
         } catch (NumberFormatException e) {
             scoreLabel.setText("Entrée invalide !");
         }
     }
 
     /**
-     * 🏆 Mise à jour du Score Board
+     * Mise à jour du Score Board
      */
     private void updateScoreBoard() {
-        scoreBoard.getChildren().clear(); // Effacer l'ancien affichage
+        scoreBoard.getChildren().clear();
 
-        // Affichage des titres des frames
         for (int i = 1; i <= 5; i++) {
             Label frameLabel = new Label("Frame " + (i));
             scoreBoard.add(frameLabel, i, 0);
         }
 
-        // Affichage des lancers et scores
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
             Label nameLabel = new Label(player.getName());
             scoreBoard.add(nameLabel, 0, i + 1);
 
-            for (int j = 1; j < player.getFrames().size(); j++) {
+            for (int j = 0; j < player.getFrames().size(); j++) {
                 String frameText = player.getFrames().get(j).getShots().toString();
                 Label frameLabel = new Label(frameText);
-                scoreBoard.add(frameLabel, j, i + 1);
+                scoreBoard.add(frameLabel, j + 1, i + 1);
             }
         }
     }
 
     /**
-     * 🏆 Fin de partie avec annonce du vainqueur
+     *  Fin de partie avec annonce du vainqueur
      */
     private void showEndGameDialog() {
         Player winner = players.stream().max((p1, p2) -> Integer.compare(p1.calculateTotalScore(), p2.calculateTotalScore())).orElse(null);

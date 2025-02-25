@@ -1,5 +1,6 @@
 package org.example.model;
 
+import javafx.scene.control.Alert;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,11 +17,23 @@ public class Frame {
     }
 
     public void addShot(int quilles, boolean isLastFrame) {
-        if (shots.size() < 3 || (isLastFrame && isStrike() && shots.size() < 4)) {
+        int totalQuilles = shots.stream().mapToInt(Integer::intValue).sum();
+
+        if (((shots.size() < 3&& (totalQuilles + quilles <= 15)) || (isLastFrame && isStrike() && shots.size() < 4))) {
             shots.add(quilles);
+            calculateScore();
+        } else {
+            afficherErreur("Impossible d'ajouter ce lancer, total des quilles dépassé !");
         }
-        calculateScore();
     }
+    private void afficherErreur(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur de saisie");
+        alert.setHeaderText("Lancer invalide !");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     private void calculateScore() {
         score = 0;
         for (int shot : shots) {
@@ -33,12 +46,10 @@ public class Frame {
     }
 
     public boolean isStrike() {
-        // Un strike est un lancer avec 15 quilles tombées, et cela doit être le premier lancer de la frame
         return shots.size() >= 1 && shots.get(0) == 15;
     }
 
     public boolean isSpare() {
-        // Un spare est lorsque 15 quilles sont tombées en 2 lancers
         return shots.size() == 2 && (shots.get(0) + shots.get(1) == 15);
     }
 
